@@ -1,6 +1,7 @@
 package sl.util;
 
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 
 public class Log {
 
@@ -8,12 +9,13 @@ public class Log {
     System.out.println(obj);
   }
 
-  public static void log() {
-    System.out.println("sl");
+  public static void notice(String str) {
+    String x = new String(str.getBytes(Charset.forName("GBK")));
+    System.err.println(x);
   }
 
-  public static void Log(Object obj) {
-    System.out.print(obj);
+  public static void log() {
+    System.out.println("sl");
   }
 
   public static PrintStream
