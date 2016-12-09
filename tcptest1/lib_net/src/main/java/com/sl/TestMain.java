@@ -1,20 +1,11 @@
 package com.sl;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static sl.util.Log.log;
 
 public class TestMain {
 
-  //血氧
-  //    血糖
-  //体温
-  //    心率
-  //心电
-  //    听诊器
   static String LTCFNIBP = "LTCFNIBP";
   static String LTCFSOP2 = "LTCFSOP2";
   static String LTCFFBG = "LTCFFBG";
@@ -36,24 +27,38 @@ public class TestMain {
   public static String doDataHeader(String dataType, String data, ArrayList<TestBean> list) {
     StringBuilder sb = new StringBuilder();
     Integer length = dataType.length();
-    byte b = length.byteValue();
-    log(b&0xff);
-    sb.append(length);
+    byte dataTypeLenth = length.byteValue();
+    log(dataTypeLenth & 0xff);
+    sb.append(dataTypeLenth);
     sb.append(dataType);
-    sb.append(data.length());
-    sb.append(list.size());
+    Integer dataLenth = data.length();
+    byte[] dataTotalBytes = intToByteArray1(dataLenth);
+    for (byte b : dataTotalBytes) {
+      sb.append(b);
+    }
+    Integer size = list.size();
+    sb.append(size.byteValue());
     for (TestBean test : list) {
       String name = test.getName();
-      int name_lenth = name.length();
+      Integer name_lenth = name.length();
       String detail = test.getDetail();
-      int detail_lenth = detail.length();
-      sb.append(name_lenth);
-      sb.append(detail_lenth);
+      Integer detail_lenth = detail.length();
+      sb.append(name_lenth.byteValue());
+      sb.append(detail_lenth.byteValue());
       sb.append(name);
       sb.append(detail);
     }
     sb.append(data);
     return sb.toString();
+  }
+
+  public static byte[] intToByteArray1(int i) {
+    byte[] result = new byte[4];
+    result[0] = (byte) ((i >> 24) & 0xFF);
+    result[1] = (byte) ((i >> 16) & 0xFF);
+    result[2] = (byte) ((i >> 8) & 0xFF);
+    result[3] = (byte) (i & 0xFF);
+    return result;
   }
 
   public static class TestBean {
